@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools", "BuildTools\BuildTools.csproj", "{A69D9246-E575-4AB0-981C-EFB5635F4DAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Console", "..\BuildTools.Console\BuildTools.Console.csproj", "{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Console", "BuildTools.Console\BuildTools.Console.csproj", "{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -50,7 +50,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\BuildTools\BuildTools.csproj">
+    <ProjectReference Include="..\BuildTools\BuildTools.csproj">
       <Project>{a69d9246-e575-4ab0-981c-efb5635f4daa}</Project>
       <Name>BuildTools</Name>
     </ProjectReference>
