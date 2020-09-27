@@ -14,6 +14,7 @@ namespace BuildScript
         public const string DEPENDENCY = "dependency";
         public const string TARGET_ASSEMBLY = "target";
         public const string OUTPUT = "output";
+        public const string FLAGS = "flags";
 
         public const char SCRIPT_LIST_SEPARATOR = ';';
         public const char SCRIPT_KEY_VALUE_SEPARATOR = ':';

@@ -20,7 +20,7 @@ namespace BuildTools.Plugins
             {
                 if (Directory.Exists(args[0]))
                 {
-                    string[] configFiles = Directory.GetFiles(args[0], "*.build", SearchOption.AllDirectories);
+                    string[] configFiles = Directory.GetFiles(Path.GetFullPath(args[0]), "*.build", SearchOption.AllDirectories);
                     foreach (string configFile in configFiles)
                     {
                         Run(new[] { configFile });
@@ -55,6 +55,9 @@ namespace BuildTools.Plugins
             string outputFile = dataKVPs.ContainsKey(ScriptLoader.OUTPUT) ? Path.Combine(rootDir, dataKVPs[ScriptLoader.OUTPUT]) : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
             string parentOutput = Path.GetDirectoryName(outputFile);
             string dependInfo = dataKVPs.ContainsKey(ScriptLoader.DEPENDENCY) ? dataKVPs[ScriptLoader.DEPENDENCY] : "";
+            string[] flags = dataKVPs.ContainsKey(ScriptLoader.FLAGS)
+                                 ? ScriptLoader.ParseList(dataKVPs[ScriptLoader.FLAGS])
+                                 : new string[0];
             if (!Directory.Exists(parentOutput)) Directory.CreateDirectory(parentOutput);
 
             string tempDir = Path.Combine(Path.GetTempPath(), pluginName + "_build");
@@ -69,7 +72,13 @@ namespace BuildTools.Plugins
 
             Console.WriteLine($"Writing File Info");
             File.Copy(targetFile, Path.Combine(tempDir, "bin", Path.GetFileName(targetFile)));
-            File.WriteAllText(Path.Combine(tempDir, "info.txt"), $"{pluginName}|{Path.GetFileName(targetFile)}|{pluginVersion}|{dependInfo}");
+            string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{pluginVersion}|{dependInfo}";
+            File.WriteAllText(Path.Combine(tempDir, "info.txt"), fileContent);
+
+            if (flags.Contains("INFO_TO_OUTPUT"))
+            {
+                File.WriteAllText(Path.Combine(Path.GetDirectoryName(outputFile), "info.txt"), fileContent);
+            }
 
             if (File.Exists(outputFile)) File.Delete(outputFile);
             ZipFile.CreateFromDirectory(tempDir, outputFile);
@@ -81,7 +90,7 @@ namespace BuildTools.Plugins
 
         private string GetVersion(string file)
         {
-            return FileVersionInfo.GetVersionInfo(file).ProductVersion;
+            return FileVersionInfo.GetVersionInfo(file).FileVersion;
         }
 
         private (string, string)[] AggregateIncludes(string rootDir, string[] includes)
