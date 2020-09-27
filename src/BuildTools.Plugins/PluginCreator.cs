@@ -55,6 +55,7 @@ namespace BuildTools.Plugins
             string outputFile = dataKVPs.ContainsKey(ScriptLoader.OUTPUT) ? Path.Combine(rootDir, dataKVPs[ScriptLoader.OUTPUT]) : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
             string parentOutput = Path.GetDirectoryName(outputFile);
             string dependInfo = dataKVPs.ContainsKey(ScriptLoader.DEPENDENCY) ? dataKVPs[ScriptLoader.DEPENDENCY] : "";
+            string origin = dataKVPs.ContainsKey(ScriptLoader.ORIGIN) ? dataKVPs[ScriptLoader.ORIGIN] : "";
             string[] flags = dataKVPs.ContainsKey(ScriptLoader.FLAGS)
                                  ? ScriptLoader.ParseList(dataKVPs[ScriptLoader.FLAGS])
                                  : new string[0];
@@ -72,7 +73,7 @@ namespace BuildTools.Plugins
 
             Console.WriteLine($"Writing File Info");
             File.Copy(targetFile, Path.Combine(tempDir, "bin", Path.GetFileName(targetFile)));
-            string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{pluginVersion}|{dependInfo}";
+            string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{origin}|{pluginVersion}|{dependInfo}";
             File.WriteAllText(Path.Combine(tempDir, "info.txt"), fileContent);
 
             if (flags.Contains("INFO_TO_OUTPUT"))
