@@ -23,7 +23,14 @@ namespace BuildTools.Plugins
                     string[] configFiles = Directory.GetFiles(Path.GetFullPath(args[0]), "*.build", SearchOption.AllDirectories);
                     foreach (string configFile in configFiles)
                     {
-                        Run(new[] { configFile });
+                        try
+                        {
+                            Run(new[] { configFile });
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"[{configFile}] Build Failure: {e.Message}");
+                        }
                     }
 
                     return;
