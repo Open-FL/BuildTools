@@ -4,55 +4,37 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 
-namespace BuildTools
+namespace BuildTools.Plugins
 {
-    public interface IBuildTool
-    {
-
-        string Name { get; }
-
-        void Run(string configPath);
-
-    }
-
-    public static class BuildTools
-    {
-
-        public static IBuildTool[] GetBuildTools()
-        {
-            Type[] asmTypes = Assembly.GetExecutingAssembly().GetTypes().Where(x => typeof(IBuildTool).IsAssignableFrom(x) && !x.IsAbstract && !x.IsInterface).ToArray();
-            IBuildTool[] ret = new IBuildTool[asmTypes.Length];
-            for (int i = 0; i < asmTypes.Length; i++)
-            {
-                Type asmType = asmTypes[i];
-                ret[i] = (IBuildTool)Activator.CreateInstance(asmType);
-            }
-
-            return ret;
-        }
-
-    }
-
     public class PluginCreator : IBuildTool
     {
 
         public string Name => "plugin";
 
-        public void Run(string configPath)
+        public void Run(string[] args)
         {
-
-            if (Directory.Exists(configPath))
+            if(args.Length==1)
             {
-                string[] configFiles = Directory.GetFiles(configPath, "*.build", SearchOption.AllDirectories);
-                foreach (string configFile in configFiles)
+                if (Directory.Exists(args[0]))
                 {
-                    Run(configFile);
-                }
+                    string[] configFiles = Directory.GetFiles(args[0], "*.build", SearchOption.AllDirectories);
+                    foreach (string configFile in configFiles)
+                    {
+                        Run(new []{configFile});
+                    }
 
-                return;
+                    return;
+                }
             }
+            else
+            {
+                Console.WriteLine("Invalid argument.");
+            }
+
+
+
+            string configPath = args[0];
 
             Console.WriteLine("Running Config: " + configPath);
 

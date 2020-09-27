@@ -1,0 +1,4 @@
+[submodule "deps/Utility"]
+	path = deps/Utility
+	url = https://github.com/Open-FL/Utility
+	branch = master

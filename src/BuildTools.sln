@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools", "BuildTools\BuildTools.csproj", "{A69D9246-E575-4AB0-981C-EFB5635F4DAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildTools", "BuildTools\BuildTools.csproj", "{A69D9246-E575-4AB0-981C-EFB5635F4DAA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Console", "BuildTools.Console\BuildTools.Console.csproj", "{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "..\deps\Utility\src\Utility\Utility.csproj", "{75931B98-4ACD-43DF-8A59-EA99C5517483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Plugins", "BuildTools.Plugins\BuildTools.Plugins.csproj", "{CA150826-2885-40F1-B891-7FEF1F2BC39D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Versioning", "BuildTools.Versioning\BuildTools.Versioning.csproj", "{B7CB2053-95DE-4730-B5A4-EDC896026EC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75931B98-4ACD-43DF-8A59-EA99C5517483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75931B98-4ACD-43DF-8A59-EA99C5517483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75931B98-4ACD-43DF-8A59-EA99C5517483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75931B98-4ACD-43DF-8A59-EA99C5517483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA150826-2885-40F1-B891-7FEF1F2BC39D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA150826-2885-40F1-B891-7FEF1F2BC39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA150826-2885-40F1-B891-7FEF1F2BC39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA150826-2885-40F1-B891-7FEF1F2BC39D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
