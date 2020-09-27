@@ -19,7 +19,7 @@ namespace BuildTools.Versioning
         public void Run(string[] args)
         {
             Debug.DefaultInitialization();
-            CommandRunnerDebugConfig.Settings.MinSeverity = Verbosity.Level20;
+            Runner.AddCommand(new LogLevelCommand());
             Runner.AddCommand(new DefaultHelpCommand());
             Runner.AddCommand(new NoWrapFlagCommand());
             Runner.AddCommand(new ToFileCommand());

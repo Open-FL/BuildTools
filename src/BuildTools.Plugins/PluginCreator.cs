@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
+using BuildScript;
+
 namespace BuildTools.Plugins
 {
     public class PluginCreator : IBuildTool
@@ -14,14 +16,14 @@ namespace BuildTools.Plugins
 
         public void Run(string[] args)
         {
-            if(args.Length==1)
+            if (args.Length == 1)
             {
                 if (Directory.Exists(args[0]))
                 {
                     string[] configFiles = Directory.GetFiles(args[0], "*.build", SearchOption.AllDirectories);
                     foreach (string configFile in configFiles)
                     {
-                        Run(new []{configFile});
+                        Run(new[] { configFile });
                     }
 
                     return;
@@ -39,19 +41,20 @@ namespace BuildTools.Plugins
             Console.WriteLine("Running Config: " + configPath);
 
             string[] data = File.ReadAllLines(configPath);
-            Dictionary<string, string> dataKVPs =
-                data.ToDictionary(x => x.Split(':').First().Trim(), x => x.Split(':').Last().Trim());
+            Dictionary<string, string> dataKVPs = ScriptLoader.ParseScript(data);
+
+
 
             string rootDir = Path.GetDirectoryName(Path.GetFullPath(configPath));
 
-            (string, string)[] includes = dataKVPs.ContainsKey("include") ? AggregateIncludes(rootDir, dataKVPs["include"].Split(';')) : new (string, string)[0];
-            (string, string)[] configs = dataKVPs.ContainsKey("config") ? AggregateIncludes(rootDir, dataKVPs["config"].Split(';')) : new (string, string)[0];
-            string targetFile = Path.Combine(rootDir, dataKVPs["target"]);
-            string pluginName = dataKVPs["name"];
-            string pluginVersion = dataKVPs.ContainsKey("version") ? dataKVPs["version"] : GetVersion(targetFile);
-            string outputFile = dataKVPs.ContainsKey("output") ? Path.Combine(rootDir, dataKVPs["output"]) : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
+            (string, string)[] includes = dataKVPs.ContainsKey(ScriptLoader.INCLUDE_FILES) ? AggregateIncludes(rootDir, ScriptLoader.ParseList(dataKVPs[ScriptLoader.INCLUDE_FILES])) : new (string, string)[0];
+            (string, string)[] configs = dataKVPs.ContainsKey(ScriptLoader.CONFIG_FILES) ? AggregateIncludes(rootDir, ScriptLoader.ParseList(dataKVPs[ScriptLoader.CONFIG_FILES])) : new (string, string)[0];
+            string targetFile = Path.Combine(rootDir, dataKVPs[ScriptLoader.TARGET_ASSEMBLY]);
+            string pluginName = dataKVPs[ScriptLoader.PLUGIN_NAME];
+            string pluginVersion = dataKVPs.ContainsKey(ScriptLoader.VERSION) ? dataKVPs[ScriptLoader.VERSION] : GetVersion(targetFile);
+            string outputFile = dataKVPs.ContainsKey(ScriptLoader.OUTPUT) ? Path.Combine(rootDir, dataKVPs[ScriptLoader.OUTPUT]) : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
             string parentOutput = Path.GetDirectoryName(outputFile);
-            string dependInfo = dataKVPs.ContainsKey("depends") ? dataKVPs["depends"] : "";
+            string dependInfo = dataKVPs.ContainsKey(ScriptLoader.DEPENDENCY) ? dataKVPs[ScriptLoader.DEPENDENCY] : "";
             if (!Directory.Exists(parentOutput)) Directory.CreateDirectory(parentOutput);
 
             string tempDir = Path.Combine(Path.GetTempPath(), pluginName + "_build");
@@ -61,8 +64,8 @@ namespace BuildTools.Plugins
             Directory.CreateDirectory(Path.Combine(tempDir, "config"));
 
             Console.WriteLine($"Copying {includes.Length + configs.Length} Files");
-            CopyFiles(rootDir, includes, Path.Combine(tempDir, "bin"));
-            CopyFiles(rootDir, configs, Path.Combine(tempDir, "config"));
+            CopyFiles(includes, Path.Combine(tempDir, "bin"));
+            CopyFiles(configs, Path.Combine(tempDir, "config"));
 
             Console.WriteLine($"Writing File Info");
             File.Copy(targetFile, Path.Combine(tempDir, "bin", Path.GetFileName(targetFile)));
@@ -104,7 +107,7 @@ namespace BuildTools.Plugins
             return ret.ToArray();
         }
 
-        private void CopyFiles(string rootDir, (string, string)[] includes, string targetDir)
+        private void CopyFiles((string, string)[] includes, string targetDir)
         {
             foreach ((string, string) include in includes)
             {

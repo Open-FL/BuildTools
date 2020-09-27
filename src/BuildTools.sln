@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Plugins", "Build
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Versioning", "BuildTools.Versioning\BuildTools.Versioning.csproj", "{B7CB2053-95DE-4730-B5A4-EDC896026EC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildScript", "BuildScript\BuildScript.csproj", "{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7CB2053-95DE-4730-B5A4-EDC896026EC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
