@@ -1,13 +1,16 @@
-﻿
-using Utility.CommandRunner;
+﻿using Utility.CommandRunner;
 
 namespace BuildTools.Versioning.Commands
 {
     public class NoWrapFlagCommand : AbstractCommand
     {
+
         public static bool NoWrap;
 
-        public NoWrapFlagCommand() : base(new[] {"--no-wrap", "-nw"}, "Disables the Max Values for the Version Strings")
+        public NoWrapFlagCommand() : base(
+                                          new[] { "--no-wrap", "-nw" },
+                                          "Disables the Max Values for the Version Strings"
+                                         )
         {
             CommandAction = (info, strings) => NoWrapFlag();
         }
@@ -16,5 +19,6 @@ namespace BuildTools.Versioning.Commands
         {
             NoWrap = true;
         }
+
     }
 }

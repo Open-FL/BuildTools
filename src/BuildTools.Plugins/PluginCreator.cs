@@ -20,7 +20,11 @@ namespace BuildTools.Plugins
             {
                 if (Directory.Exists(args[0]))
                 {
-                    string[] configFiles = Directory.GetFiles(Path.GetFullPath(args[0]), "*.build", SearchOption.AllDirectories);
+                    string[] configFiles = Directory.GetFiles(
+                                                              Path.GetFullPath(args[0]),
+                                                              "*.build",
+                                                              SearchOption.AllDirectories
+                                                             );
                     foreach (string configFile in configFiles)
                     {
                         try
@@ -42,7 +46,6 @@ namespace BuildTools.Plugins
             }
 
 
-
             string configPath = args[0];
 
             Console.WriteLine("Running Config: " + configPath);
@@ -51,25 +54,51 @@ namespace BuildTools.Plugins
             Dictionary<string, string> dataKVPs = ScriptLoader.ParseScript(data);
 
 
-
             string rootDir = Path.GetDirectoryName(Path.GetFullPath(configPath));
 
-            (string, string)[] includes = dataKVPs.ContainsKey(ScriptLoader.INCLUDE_FILES) ? AggregateIncludes(rootDir, ScriptLoader.ParseList(dataKVPs[ScriptLoader.INCLUDE_FILES])) : new (string, string)[0];
-            (string, string)[] configs = dataKVPs.ContainsKey(ScriptLoader.CONFIG_FILES) ? AggregateIncludes(rootDir, ScriptLoader.ParseList(dataKVPs[ScriptLoader.CONFIG_FILES])) : new (string, string)[0];
+            (string, string)[] includes = dataKVPs.ContainsKey(ScriptLoader.INCLUDE_FILES)
+                                              ? AggregateIncludes(
+                                                                  rootDir,
+                                                                  ScriptLoader.ParseList(
+                                                                                         dataKVPs[ScriptLoader
+                                                                                                      .INCLUDE_FILES]
+                                                                                        )
+                                                                 )
+                                              : new (string, string)[0];
+            (string, string)[] configs = dataKVPs.ContainsKey(ScriptLoader.CONFIG_FILES)
+                                             ? AggregateIncludes(
+                                                                 rootDir,
+                                                                 ScriptLoader.ParseList(
+                                                                                        dataKVPs[ScriptLoader
+                                                                                                     .CONFIG_FILES]
+                                                                                       )
+                                                                )
+                                             : new (string, string)[0];
             string targetFile = Path.Combine(rootDir, dataKVPs[ScriptLoader.TARGET_ASSEMBLY]);
             string pluginName = dataKVPs[ScriptLoader.PLUGIN_NAME];
-            string pluginVersion = dataKVPs.ContainsKey(ScriptLoader.VERSION) ? dataKVPs[ScriptLoader.VERSION] : GetVersion(targetFile);
-            string outputFile = dataKVPs.ContainsKey(ScriptLoader.OUTPUT) ? Path.Combine(rootDir, dataKVPs[ScriptLoader.OUTPUT]) : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
+            string pluginVersion = dataKVPs.ContainsKey(ScriptLoader.VERSION)
+                                       ? dataKVPs[ScriptLoader.VERSION]
+                                       : GetVersion(targetFile);
+            string outputFile = dataKVPs.ContainsKey(ScriptLoader.OUTPUT)
+                                    ? Path.Combine(rootDir, dataKVPs[ScriptLoader.OUTPUT])
+                                    : Path.GetFullPath(".\\build\\" + pluginName + ".zip");
             string parentOutput = Path.GetDirectoryName(outputFile);
             string dependInfo = dataKVPs.ContainsKey(ScriptLoader.DEPENDENCY) ? dataKVPs[ScriptLoader.DEPENDENCY] : "";
             string origin = dataKVPs.ContainsKey(ScriptLoader.ORIGIN) ? dataKVPs[ScriptLoader.ORIGIN] : "";
             string[] flags = dataKVPs.ContainsKey(ScriptLoader.FLAGS)
                                  ? ScriptLoader.ParseList(dataKVPs[ScriptLoader.FLAGS])
                                  : new string[0];
-            if (!Directory.Exists(parentOutput)) Directory.CreateDirectory(parentOutput);
+            if (!Directory.Exists(parentOutput))
+            {
+                Directory.CreateDirectory(parentOutput);
+            }
 
             string tempDir = Path.Combine(Path.GetTempPath(), pluginName + "_build");
-            if (Directory.Exists(tempDir)) Directory.Delete(tempDir, true);
+            if (Directory.Exists(tempDir))
+            {
+                Directory.Delete(tempDir, true);
+            }
+
             Directory.CreateDirectory(tempDir);
             Directory.CreateDirectory(Path.Combine(tempDir, "bin"));
             Directory.CreateDirectory(Path.Combine(tempDir, "config"));
@@ -78,7 +107,7 @@ namespace BuildTools.Plugins
             CopyFiles(includes, Path.Combine(tempDir, "bin"));
             CopyFiles(configs, Path.Combine(tempDir, "config"));
 
-            Console.WriteLine($"Writing File Info");
+            Console.WriteLine("Writing File Info");
             File.Copy(targetFile, Path.Combine(tempDir, "bin", Path.GetFileName(targetFile)));
             string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{origin}|{pluginVersion}|{dependInfo}";
             File.WriteAllText(Path.Combine(tempDir, "info.txt"), fileContent);
@@ -88,11 +117,15 @@ namespace BuildTools.Plugins
                 File.WriteAllText(Path.Combine(Path.GetDirectoryName(outputFile), "info.txt"), fileContent);
             }
 
-            if (File.Exists(outputFile)) File.Delete(outputFile);
+            if (File.Exists(outputFile))
+            {
+                File.Delete(outputFile);
+            }
+
             ZipFile.CreateFromDirectory(tempDir, outputFile);
 
             Directory.Delete(tempDir, true);
-            Console.WriteLine($"Finished building.");
+            Console.WriteLine("Finished building.");
         }
 
 
@@ -109,15 +142,30 @@ namespace BuildTools.Plugins
                 if (fullInclude.Contains('*'))
                 {
                     string[] parts = fullInclude.Split('*');
-                    ret.AddRange(Directory.GetFiles(Path.Combine(rootDir, parts[0]), parts[1], SearchOption.AllDirectories).Select(x => (Path.Combine(rootDir, parts[0]), x)));
+                    ret.AddRange(
+                                 Directory.GetFiles(
+                                                    Path.Combine(rootDir, parts[0]),
+                                                    parts[1],
+                                                    SearchOption.AllDirectories
+                                                   ).Select(x => (Path.Combine(rootDir, parts[0]), x))
+                                );
                 }
                 else if (Directory.Exists(Path.Combine(rootDir, fullInclude)))
                 {
-                    ret.AddRange(Directory.GetFiles(Path.Combine(rootDir, fullInclude), "*", SearchOption.AllDirectories).Select(x => (Path.Combine(rootDir, fullInclude), x)));
+                    ret.AddRange(
+                                 Directory.GetFiles(
+                                                    Path.Combine(rootDir, fullInclude),
+                                                    "*",
+                                                    SearchOption.AllDirectories
+                                                   ).Select(x => (Path.Combine(rootDir, fullInclude), x))
+                                );
                 }
                 else
                 {
-                    ret.Add((Path.GetFullPath(Path.Combine(rootDir, Path.GetDirectoryName(fullInclude))), Path.GetFullPath(Path.Combine(rootDir, fullInclude))));
+                    ret.Add(
+                            (Path.GetFullPath(Path.Combine(rootDir, Path.GetDirectoryName(fullInclude))),
+                             Path.GetFullPath(Path.Combine(rootDir, fullInclude)))
+                           );
                 }
             }
 
@@ -134,8 +182,10 @@ namespace BuildTools.Plugins
                 {
                     Directory.CreateDirectory(dir);
                 }
+
                 File.Copy(include.Item2, target);
             }
         }
+
     }
 }

@@ -135,6 +135,7 @@ namespace BuildTools.Versioning
                 string v = source.Substring(start, end - start);
                 return Version.Parse(v);
             }
+
             XmlDocument doc = new XmlDocument();
             doc.Load(file);
             if (IsNetFramework(doc))
@@ -226,7 +227,7 @@ namespace BuildTools.Versioning
 
                     if (long.TryParse(value, out long newValue))
                     {
-                        versions[i] = (int)(newValue % ushort.MaxValue);
+                        versions[i] = (int) (newValue % ushort.MaxValue);
                     }
                     else
                     {
@@ -239,7 +240,12 @@ namespace BuildTools.Versioning
                 }
             }
 
-            return new Version(versions[0], versions[1] < 0 ? 0 : versions[1], versions[2] < 0 ? 0 : versions[2], versions[3] < 0 ? 0 : versions[3]);
+            return new Version(
+                               versions[0],
+                               versions[1] < 0 ? 0 : versions[1],
+                               versions[2] < 0 ? 0 : versions[2],
+                               versions[3] < 0 ? 0 : versions[3]
+                              );
         }
 
         private static Version FindVersion(XmlDocument doc)
@@ -299,10 +305,18 @@ namespace BuildTools.Versioning
                         if (s.ChildNodes[i].HasChildNodes && s.ChildNodes[i].FirstChild.Name == "TargetFramework")
                         {
                             XmlNode assemblyVersion = s.ChildNodes[i]
-                                .AppendChild(doc.CreateNode(XmlNodeType.Element, "AssemblyVersion", ""));
+                                                       .AppendChild(
+                                                                    doc.CreateNode(
+                                                                                   XmlNodeType.Element,
+                                                                                   "AssemblyVersion",
+                                                                                   ""
+                                                                                  )
+                                                                   );
                             assemblyVersion.InnerText = "0.0.1.0";
                             XmlNode fileVersion = s.ChildNodes[i]
-                                .AppendChild(doc.CreateNode(XmlNodeType.Element, "FileVersion", ""));
+                                                   .AppendChild(
+                                                                doc.CreateNode(XmlNodeType.Element, "FileVersion", "")
+                                                               );
                             fileVersion.InnerText = "0.0.1.0";
                             ret[0] = assemblyVersion;
                             ret[1] = fileVersion;
@@ -313,5 +327,6 @@ namespace BuildTools.Versioning
 
             return ret;
         }
+
     }
 }

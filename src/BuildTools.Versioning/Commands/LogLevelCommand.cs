@@ -15,7 +15,6 @@ namespace BuildTools.Versioning.Commands
 
         private void SetLogLevel(StartupArgumentInfo arg1, string[] arg2)
         {
-
             if (int.TryParse(arg2[0], out int result))
             {
                 CommandRunnerDebugConfig.Settings.MinSeverity = (Verbosity) result;
@@ -24,7 +23,6 @@ namespace BuildTools.Versioning.Commands
             {
                 CommandRunnerDebugConfig.Settings.MinSeverity = enumResult;
             }
-
         }
 
     }

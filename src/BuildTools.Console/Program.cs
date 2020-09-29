@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BuildTools.Console
 {
     internal class Program
     {
+
         internal static void Main(string[] args)
         {
-
             if (args.Length != 0)
             {
                 IBuildTool[] tools = GetBuildTools();
@@ -32,8 +30,18 @@ namespace BuildTools.Console
         private static IBuildTool[] GetBuildTools()
         {
             List<IBuildTool> tools = new List<IBuildTool>();
-            string path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().Location).AbsolutePath), "tools");
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            string path = Path.Combine(
+                                       Path.GetDirectoryName(
+                                                             new Uri(Assembly.GetExecutingAssembly().Location)
+                                                                 .AbsolutePath
+                                                            ),
+                                       "tools"
+                                      );
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             string[] files = Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories);
             foreach (string file in files)
             {
@@ -50,5 +58,6 @@ namespace BuildTools.Console
 
             return tools.ToArray();
         }
+
     }
 }

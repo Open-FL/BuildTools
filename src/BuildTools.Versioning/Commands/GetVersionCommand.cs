@@ -8,8 +8,11 @@ namespace BuildTools.Versioning.Commands
 {
     public class GetVersionCommand : AbstractCommand
     {
-        public GetVersionCommand() : base(new[] {"--get-version", "-get"},
-            "Returns the File Version of the specified file")
+
+        public GetVersionCommand() : base(
+                                          new[] { "--get-version", "-get" },
+                                          "Returns the File Version of the specified file"
+                                         )
         {
             CommandAction = (info, strings) => GetVersion(strings);
         }
@@ -29,5 +32,6 @@ namespace BuildTools.Versioning.Commands
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(file);
             return fvi.FileVersion;
         }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -28,14 +27,21 @@ namespace BuildScript
 
         public static Dictionary<string, string> ParseScript(string[] data)
         {
-            return data.ToDictionary(x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).First().Trim(), x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).Skip(1).Unpack().Trim());
+            return data.ToDictionary(
+                                     x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).First().Trim(),
+                                     x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).Skip(1).Unpack().Trim()
+                                    );
         }
 
         private static string Unpack(this IEnumerable<string> arr)
         {
             string[] array = arr.ToArray();
-            if (array.Length == 0) return "";
-            StringBuilder sb =new StringBuilder(array[0]);
+            if (array.Length == 0)
+            {
+                return "";
+            }
+
+            StringBuilder sb = new StringBuilder(array[0]);
             for (int i = 1; i < array.Length; i++)
             {
                 sb.Append(SCRIPT_KEY_VALUE_SEPARATOR + array[i]);
@@ -43,5 +49,6 @@ namespace BuildScript
 
             return sb.ToString();
         }
+
     }
 }

@@ -8,8 +8,12 @@ namespace BuildTools.Versioning.Commands
 {
     public class ChangeVersionCommand : AbstractCommand
     {
-        public ChangeVersionCommand() : base(new[] { "--increase", "-i" },
-            "Increases the last number in the version string 0.0.0.1 => 0.0.0.2", true)
+
+        public ChangeVersionCommand() : base(
+                                             new[] { "--increase", "-i" },
+                                             "Increases the last number in the version string 0.0.0.1 => 0.0.0.2",
+                                             true
+                                            )
         {
             CommandAction = (info, strings) => ChangeVersion(strings);
         }
@@ -23,7 +27,7 @@ namespace BuildTools.Versioning.Commands
                 versionChangeStr = arg2[1];
             }
 
-            string[] files = new[] { f };
+            string[] files = { f };
             if (f.EndsWith(".sln"))
             {
                 files = Directory.GetFiles(
@@ -35,7 +39,6 @@ namespace BuildTools.Versioning.Commands
 
             foreach (string file in files)
             {
-
                 Version v = VersionHelperConsole.GetVersionFromFile(file);
                 Version newV = VersionHelperConsole.ChangeVersion(v, versionChangeStr);
 
@@ -49,5 +52,6 @@ namespace BuildTools.Versioning.Commands
                 VersionHelperConsole.ChangeVersionInFile(file, newV);
             }
         }
+
     }
 }
