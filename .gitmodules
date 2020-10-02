@@ -2,3 +2,7 @@
 	path = deps/Utility
 	url = https://github.com/Open-FL/Utility
 	branch = master
+[submodule "deps/CommandlineSystem"]
+	path = deps/CommandlineSystem
+	url = https://github.com/Open-FL/CommandlineSystem
+	branch = master

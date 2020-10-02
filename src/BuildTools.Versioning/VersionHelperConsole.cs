@@ -5,13 +5,15 @@ using System.Xml;
 
 using BuildTools.Versioning.Commands;
 
+using CommandlineSystem;
+
 using Utility.ADL;
 using Utility.CommandRunner;
 using Utility.CommandRunner.BuiltInCommands;
 
 namespace BuildTools.Versioning
 {
-    public class VersionHelperConsole : IBuildTool
+    public class VersionHelperConsole : ICommandlineSystem
     {
 
         public string Name => "version";

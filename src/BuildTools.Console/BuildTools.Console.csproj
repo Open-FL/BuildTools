@@ -57,9 +57,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BuildTools\BuildTools.csproj">
-      <Project>{a69d9246-e575-4ab0-981c-efb5635f4daa}</Project>
-      <Name>BuildTools</Name>
+    <ProjectReference Include="..\..\deps\CommandlineSystem\src\CommandlineSystem\CommandlineSystem.csproj">
+      <Project>{508c54d1-60d3-4840-a14c-427ac4714426}</Project>
+      <Name>CommandlineSystem</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildTools", "BuildTools\BuildTools.csproj", "{A69D9246-E575-4AB0-981C-EFB5635F4DAA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Console", "BuildTools.Console\BuildTools.Console.csproj", "{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utility", "..\deps\Utility\src\Utility\Utility.csproj", "{75931B98-4ACD-43DF-8A59-EA99C5517483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Plugins", "BuildTools.Plugins\BuildTools.Plugins.csproj", "{CA150826-2885-40F1-B891-7FEF1F2BC39D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildTools.Plugins", "BuildTools.Plugins\BuildTools.Plugins.csproj", "{CA150826-2885-40F1-B891-7FEF1F2BC39D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTools.Versioning", "BuildTools.Versioning\BuildTools.Versioning.csproj", "{B7CB2053-95DE-4730-B5A4-EDC896026EC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildTools.Versioning", "BuildTools.Versioning\BuildTools.Versioning.csproj", "{B7CB2053-95DE-4730-B5A4-EDC896026EC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildScript", "BuildScript\BuildScript.csproj", "{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildScript", "BuildScript\BuildScript.csproj", "{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandlineSystem", "..\deps\CommandlineSystem\src\CommandlineSystem\CommandlineSystem.csproj", "{508C54D1-60D3-4840-A14C-427AC4714426}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A69D9246-E575-4AB0-981C-EFB5635F4DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A69D9246-E575-4AB0-981C-EFB5635F4DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A69D9246-E575-4AB0-981C-EFB5635F4DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A69D9246-E575-4AB0-981C-EFB5635F4DAA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B1CECF-26FE-42E4-8C31-4C7A283AA9B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5BD5B2F-6D3E-4A2C-9BFC-9CD7925F1920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{508C54D1-60D3-4840-A14C-427AC4714426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{508C54D1-60D3-4840-A14C-427AC4714426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{508C54D1-60D3-4840-A14C-427AC4714426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{508C54D1-60D3-4840-A14C-427AC4714426}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

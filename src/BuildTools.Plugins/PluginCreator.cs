@@ -7,9 +7,11 @@ using System.Linq;
 
 using BuildScript;
 
+using CommandlineSystem;
+
 namespace BuildTools.Plugins
 {
-    public class PluginCreator : IBuildTool
+    public class PluginCreator : ICommandlineSystem
     {
 
         public string Name => "plugin";
