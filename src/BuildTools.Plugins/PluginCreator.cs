@@ -11,10 +11,11 @@ using CommandlineSystem;
 
 namespace BuildTools.Plugins
 {
-    public class PluginCreator : ICommandlineSystem
+    public abstract class ZipBuildCreator : ICommandlineSystem
     {
 
-        public string Name => "plugin";
+        public abstract string Name { get; }
+        public abstract string Extension { get; }
 
         public void Run(string[] args)
         {
@@ -24,7 +25,7 @@ namespace BuildTools.Plugins
                 {
                     string[] configFiles = Directory.GetFiles(
                                                               Path.GetFullPath(args[0]),
-                                                              "*.build",
+                                                              $"*.{Extension}",
                                                               SearchOption.AllDirectories
                                                              );
                     foreach (string configFile in configFiles)
@@ -102,17 +103,32 @@ namespace BuildTools.Plugins
             }
 
             Directory.CreateDirectory(tempDir);
-            Directory.CreateDirectory(Path.Combine(tempDir, "bin"));
-            Directory.CreateDirectory(Path.Combine(tempDir, "config"));
+            string binDir;
+            string configDir;
+            if (flags.Contains("NO_STRUCTURE"))
+            {
+                binDir = tempDir;
+                configDir = tempDir;
+            }
+            else
+            {
+                binDir = Path.Combine(tempDir, "bin");
+                configDir = Path.Combine(tempDir, "config");
+            }
+            Directory.CreateDirectory(binDir);
+            Directory.CreateDirectory(configDir);
 
             Console.WriteLine($"Copying {includes.Length + configs.Length} Files");
-            CopyFiles(includes, Path.Combine(tempDir, "bin"));
-            CopyFiles(configs, Path.Combine(tempDir, "config"));
+            CopyFiles(includes, binDir);
+            CopyFiles(configs, configDir);
 
             Console.WriteLine("Writing File Info");
-            File.Copy(targetFile, Path.Combine(tempDir, "bin", Path.GetFileName(targetFile)));
+            File.Copy(targetFile, Path.Combine(binDir, Path.GetFileName(targetFile)));
             string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{origin}|{pluginVersion}|{dependInfo}";
-            File.WriteAllText(Path.Combine(tempDir, "info.txt"), fileContent);
+            if (!flags.Contains("NO_INFO_TO_ZIP"))
+            {
+                File.WriteAllText(Path.Combine(tempDir, "info.txt"), fileContent);
+            }
 
             if (flags.Contains("INFO_TO_OUTPUT"))
             {
@@ -143,13 +159,16 @@ namespace BuildTools.Plugins
             {
                 if (fullInclude.Contains('*'))
                 {
-                    string[] parts = fullInclude.Split('*');
+                    string[] parts = fullInclude.Replace("/", "\\").Split('*');
+                    int findLast = parts[0].LastIndexOf("\\");
+                    string pre = parts[0].Remove(0, findLast + 1);
+                    string dir = parts[0].Remove(findLast, parts[0].Length - findLast);
                     ret.AddRange(
                                  Directory.GetFiles(
-                                                    Path.Combine(rootDir, parts[0]),
-                                                    parts[1],
+                                                    Path.Combine(rootDir, dir),
+                                                    pre + "*" + parts[1],
                                                     SearchOption.AllDirectories
-                                                   ).Select(x => (Path.Combine(rootDir, parts[0]), x))
+                                                   ).Select(x => (Path.Combine(rootDir, dir), x))
                                 );
                 }
                 else if (Directory.Exists(Path.Combine(rootDir, fullInclude)))
@@ -188,6 +207,24 @@ namespace BuildTools.Plugins
                 File.Copy(include.Item2, target);
             }
         }
+
+    }
+
+    public class ApplicationCreator : ZipBuildCreator
+    {
+
+        public override string Name => "app";
+
+        public override string Extension => "app";
+
+    }
+
+    public class PluginCreator : ZipBuildCreator
+    {
+
+        public override string Name => "plugin";
+
+        public override string Extension => "build";
 
     }
 }
