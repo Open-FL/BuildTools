@@ -17,14 +17,27 @@ namespace BuildTools.Plugins
         public abstract string Name { get; }
         public abstract string Extension { get; }
 
+
         public void Run(string[] args)
         {
-            if (args.Length == 1)
+            bool throwOnError = args.Contains("--throw");
+            bool buildOutput = args.Contains("--build-out");
+            string[] arguments;
+            if (throwOnError || buildOutput)
             {
-                if (Directory.Exists(args[0]))
+                arguments = args.Where(x => x != "--throw" && x != "--build-out").ToArray();
+            }
+            else
+            {
+                arguments = args;
+            }
+
+            if (arguments.Length == 1)
+            {
+                if (Directory.Exists(arguments[0]))
                 {
                     string[] configFiles = Directory.GetFiles(
-                                                              Path.GetFullPath(args[0]),
+                                                              Path.GetFullPath(arguments[0]),
                                                               $"*.{Extension}",
                                                               SearchOption.AllDirectories
                                                              );
@@ -49,16 +62,57 @@ namespace BuildTools.Plugins
             }
 
 
-            string configPath = args[0];
-
-            Console.WriteLine("Running Config: " + configPath);
+            string configPath = arguments[0];
+            
 
             string[] data = File.ReadAllLines(configPath);
-            Dictionary<string, string> dataKVPs = ScriptLoader.ParseScript(data);
-
-
+            Dictionary<string, string> dataKVPs = ScriptLoader.ParseScript(data, throwOnError);
             string rootDir = Path.GetDirectoryName(Path.GetFullPath(configPath));
 
+            if (dataKVPs.ContainsKey(ScriptLoader.COMPILE_COMMAND))
+            {
+                string solution = dataKVPs.ContainsKey(ScriptLoader.SOLUTION) ? dataKVPs[ScriptLoader.SOLUTION] : "";
+                string proc = string.Format(dataKVPs[ScriptLoader.COMPILE_COMMAND], solution);
+                string pn = proc.Split(' ').First();
+                string pp = proc.Remove(0, pn.Length).Trim();
+                Console.WriteLine($"[{dataKVPs[ScriptLoader.PLUGIN_NAME]}] Building Solution {solution}");
+                if (buildOutput)
+                {
+                    ProcessStartInfo si = new ProcessStartInfo
+                                          {
+                                              Arguments = pp,
+                                              FileName = pn,
+                                              WorkingDirectory = rootDir,
+                                              UseShellExecute = false,
+                                              RedirectStandardOutput = true,
+                                              CreateNoWindow = true
+                                          };
+                    Process p = Process.Start(si);
+                    while (!p.StandardOutput.EndOfStream)
+                    {
+                        string line = p.StandardOutput.ReadLine();
+                        Console.WriteLine(line);
+                        // do something with line
+                    }
+                }
+                else
+                {
+                    ProcessStartInfo si = new ProcessStartInfo
+                                          {
+                                              Arguments = pp,
+                                              FileName = pn,
+                                              WorkingDirectory = rootDir,
+                                              UseShellExecute = false,
+                                              CreateNoWindow = true
+                                          };
+                    Process p = Process.Start(si);
+                    p.WaitForExit();
+                }
+                
+            }
+
+
+            Console.WriteLine($"[{dataKVPs[ScriptLoader.PLUGIN_NAME]}] Processing Includes");
             (string, string)[] includes = dataKVPs.ContainsKey(ScriptLoader.INCLUDE_FILES)
                                               ? AggregateIncludes(
                                                                   rootDir,
@@ -68,6 +122,8 @@ namespace BuildTools.Plugins
                                                                                         )
                                                                  )
                                               : new (string, string)[0];
+
+            Console.WriteLine($"[{dataKVPs[ScriptLoader.PLUGIN_NAME]}] Processing Configs");
             (string, string)[] configs = dataKVPs.ContainsKey(ScriptLoader.CONFIG_FILES)
                                              ? AggregateIncludes(
                                                                  rootDir,
@@ -118,11 +174,11 @@ namespace BuildTools.Plugins
             Directory.CreateDirectory(binDir);
             Directory.CreateDirectory(configDir);
 
-            Console.WriteLine($"Copying {includes.Length + configs.Length} Files");
+            Console.WriteLine($"[{pluginName}] Copying {includes.Length + configs.Length} Files");
             CopyFiles(includes, binDir);
             CopyFiles(configs, configDir);
 
-            Console.WriteLine("Writing File Info");
+            Console.WriteLine($"[{pluginName}] Writing File Info");
             File.Copy(targetFile, Path.Combine(binDir, Path.GetFileName(targetFile)));
             string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{origin}|{pluginVersion}|{dependInfo}";
             if (!flags.Contains("NO_INFO_TO_ZIP"))
@@ -140,10 +196,11 @@ namespace BuildTools.Plugins
                 File.Delete(outputFile);
             }
 
+            Console.WriteLine($"[{pluginName}] Packing...");
             ZipFile.CreateFromDirectory(tempDir, outputFile);
 
             Directory.Delete(tempDir, true);
-            Console.WriteLine("Finished building.");
+            Console.WriteLine($"[{pluginName}] Finished building.");
         }
 
 
@@ -163,16 +220,19 @@ namespace BuildTools.Plugins
                     int findLast = parts[0].LastIndexOf("\\");
                     string pre = parts[0].Remove(0, findLast + 1);
                     string dir = parts[0].Remove(findLast, parts[0].Length - findLast);
+                    string pattern = pre + "*" + parts[1];
+                    Console.WriteLine("Processing Pattern: " + pattern);
                     ret.AddRange(
                                  Directory.GetFiles(
                                                     Path.Combine(rootDir, dir),
-                                                    pre + "*" + parts[1],
+                                                    pattern,
                                                     SearchOption.AllDirectories
                                                    ).Select(x => (Path.Combine(rootDir, dir), x))
                                 );
                 }
                 else if (Directory.Exists(Path.Combine(rootDir, fullInclude)))
                 {
+                    Console.WriteLine("Processing Directory: " + fullInclude);
                     ret.AddRange(
                                  Directory.GetFiles(
                                                     Path.Combine(rootDir, fullInclude),
@@ -183,6 +243,7 @@ namespace BuildTools.Plugins
                 }
                 else
                 {
+                    Console.WriteLine("Processing File: " + fullInclude);
                     ret.Add(
                             (Path.GetFullPath(Path.Combine(rootDir, Path.GetDirectoryName(fullInclude))),
                              Path.GetFullPath(Path.Combine(rootDir, fullInclude)))
