@@ -14,8 +14,9 @@ namespace BuildTools.Plugins
     public abstract class ZipBuildCreator : ICommandlineSystem
     {
 
-        public abstract string Name { get; }
         public abstract string Extension { get; }
+
+        public abstract string Name { get; }
 
 
         public void Run(string[] args)
@@ -63,7 +64,7 @@ namespace BuildTools.Plugins
 
 
             string configPath = arguments[0];
-            
+
 
             string[] data = File.ReadAllLines(configPath);
             Dictionary<string, string> dataKVPs = ScriptLoader.ParseScript(data, throwOnError);
@@ -92,6 +93,7 @@ namespace BuildTools.Plugins
                     {
                         string line = p.StandardOutput.ReadLine();
                         Console.WriteLine(line);
+
                         // do something with line
                     }
                 }
@@ -108,7 +110,6 @@ namespace BuildTools.Plugins
                     Process p = Process.Start(si);
                     p.WaitForExit();
                 }
-                
             }
 
 
@@ -117,9 +118,9 @@ namespace BuildTools.Plugins
                                               ? AggregateIncludes(
                                                                   rootDir,
                                                                   ScriptLoader.ParseList(
-                                                                                         dataKVPs[ScriptLoader
-                                                                                                      .INCLUDE_FILES]
-                                                                                        )
+                                                                       dataKVPs[ScriptLoader
+                                                                                    .INCLUDE_FILES]
+                                                                      )
                                                                  )
                                               : new (string, string)[0];
 
@@ -128,9 +129,9 @@ namespace BuildTools.Plugins
                                              ? AggregateIncludes(
                                                                  rootDir,
                                                                  ScriptLoader.ParseList(
-                                                                                        dataKVPs[ScriptLoader
-                                                                                                     .CONFIG_FILES]
-                                                                                       )
+                                                                      dataKVPs[ScriptLoader
+                                                                                   .CONFIG_FILES]
+                                                                     )
                                                                 )
                                              : new (string, string)[0];
             string targetFile = Path.Combine(rootDir, dataKVPs[ScriptLoader.TARGET_ASSEMBLY]);
@@ -171,6 +172,7 @@ namespace BuildTools.Plugins
                 binDir = Path.Combine(tempDir, "bin");
                 configDir = Path.Combine(tempDir, "config");
             }
+
             Directory.CreateDirectory(binDir);
             Directory.CreateDirectory(configDir);
 

@@ -30,24 +30,30 @@ namespace BuildScript
 
         public static Dictionary<string, string> ParseScript(string[] data, bool throwOnError)
         {
-            Dictionary<string, string> ret = data.Select(x => x.Split('#').First()).Where(x => !string.IsNullOrEmpty(x)).ToDictionary(
-                                     x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).First().Trim(),
-                                     x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).Skip(1).Unpack().Trim()
-                                    );
+            Dictionary<string, string> ret = data.Select(x => x.Split('#').First()).Where(x => !string.IsNullOrEmpty(x))
+                                                 .ToDictionary(
+                                                               x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).First().Trim(),
+                                                               x => x.Split(SCRIPT_KEY_VALUE_SEPARATOR).Skip(1).Unpack()
+                                                                     .Trim()
+                                                              );
             ResolveVariables(ret, throwOnError);
             return ret;
         }
 
         private static void ResolveVariables(Dictionary<string, string> data, bool throwOnError)
         {
-            Dictionary<string, bool> varMap = data.Keys.Select(x => (x, data[x].Contains("%"))).ToDictionary(x => x.Item1, x => x.Item2);
+            Dictionary<string, bool> varMap = data.Keys.Select(x => (x, data[x].Contains("%")))
+                                                  .ToDictionary(x => x.Item1, x => x.Item2);
 
             while (varMap.Values.Any(x => x))
             {
                 Dictionary<string, bool> newVarMap = new Dictionary<string, bool>(varMap);
-                foreach(KeyValuePair<string, bool> keyValuePair in varMap)
+                foreach (KeyValuePair<string, bool> keyValuePair in varMap)
                 {
-                    if(!keyValuePair.Value)continue;
+                    if (!keyValuePair.Value)
+                    {
+                        continue;
+                    }
 
 
                     string key = keyValuePair.Key;
@@ -76,11 +82,11 @@ namespace BuildScript
                         {
                             Console.WriteLine("Can not Find Variable: " + varName);
                             if (throwOnError)
-                                throw new InvalidOperationException();
-                            else
                             {
-                                return;
+                                throw new InvalidOperationException();
                             }
+
+                            return;
                         }
                     }
 
@@ -91,7 +97,6 @@ namespace BuildScript
                 }
 
                 varMap = newVarMap;
-
             }
         }
 
@@ -106,6 +111,7 @@ namespace BuildScript
                 {
                     throw new Exception("Invalid Variable Syntax.");
                 }
+
                 ret.Add((idx, next));
                 idx = line.IndexOf('%', next + 1);
             }

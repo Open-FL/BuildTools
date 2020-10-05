@@ -309,10 +309,10 @@ namespace BuildTools.Versioning
                             XmlNode assemblyVersion = s.ChildNodes[i]
                                                        .AppendChild(
                                                                     doc.CreateNode(
-                                                                                   XmlNodeType.Element,
-                                                                                   "AssemblyVersion",
-                                                                                   ""
-                                                                                  )
+                                                                         XmlNodeType.Element,
+                                                                         "AssemblyVersion",
+                                                                         ""
+                                                                        )
                                                                    );
                             assemblyVersion.InnerText = "0.0.1.0";
                             XmlNode fileVersion = s.ChildNodes[i]
