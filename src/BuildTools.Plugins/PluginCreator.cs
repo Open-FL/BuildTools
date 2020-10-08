@@ -181,6 +181,11 @@ namespace BuildTools.Plugins
             CopyFiles(configs, configDir);
 
             Console.WriteLine($"[{pluginName}] Writing File Info");
+            if (File.Exists(Path.Combine(binDir, Path.GetFileName(targetFile))))
+            {
+                File.Delete(Path.Combine(binDir, Path.GetFileName(targetFile)));
+            }
+
             File.Copy(targetFile, Path.Combine(binDir, Path.GetFileName(targetFile)));
             string fileContent = $"{pluginName}|{Path.GetFileName(targetFile)}|{origin}|{pluginVersion}|{dependInfo}";
             if (!flags.Contains("NO_INFO_TO_ZIP"))
