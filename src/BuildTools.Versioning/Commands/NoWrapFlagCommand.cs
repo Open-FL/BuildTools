@@ -1,6 +1,4 @@
-﻿using Utility.CommandRunner;
-
-namespace BuildTools.Versioning.Commands
+﻿namespace BuildTools.Versioning.Commands
 {
     public class NoWrapFlagCommand : AbstractCommand
     {

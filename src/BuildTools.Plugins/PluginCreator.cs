@@ -5,10 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-using BuildScript;
-
-using CommandlineSystem;
-
 namespace BuildTools.Plugins
 {
     public abstract class ZipBuildCreator : ICommandlineSystem
