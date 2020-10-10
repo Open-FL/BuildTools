@@ -5,6 +5,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
+using BuildScript;
+
+using CommandlineSystem;
+
 namespace BuildTools.Plugins
 {
     public abstract class ZipBuildCreator : ICommandlineSystem
@@ -89,8 +93,11 @@ namespace BuildTools.Plugins
                     {
                         string line = p.StandardOutput.ReadLine();
                         Console.WriteLine(line);
+                    }
 
-                        // do something with line
+                    if (throwOnError && p.ExitCode != 0)
+                    {
+                        throw new Exception("Build Failed");
                     }
                 }
                 else
@@ -105,6 +112,11 @@ namespace BuildTools.Plugins
                                           };
                     Process p = Process.Start(si);
                     p.WaitForExit();
+
+                    if (throwOnError && p.ExitCode != 0)
+                    {
+                        throw new Exception("Build Failed");
+                    }
                 }
             }
 

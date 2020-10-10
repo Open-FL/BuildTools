@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 
+using Utility.ADL;
+using Utility.CommandRunner;
+
 namespace BuildTools.Versioning.Commands
 {
     public class ChangeVersionCommand : AbstractCommand

@@ -1,4 +1,6 @@
-﻿namespace BuildTools.Console
+﻿using CommandlineSystem;
+
+namespace BuildTools.Console
 {
     internal class Program
     {

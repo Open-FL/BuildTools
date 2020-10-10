@@ -1,5 +1,7 @@
 ﻿using System.IO;
 
+using Utility.CommandRunner;
+
 namespace BuildTools.Versioning.Commands
 {
     public class ToFileCommand : AbstractCommand
